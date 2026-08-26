@@ -19,12 +19,10 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Preconexiones para rendimiento -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
 
-    <!-- Tipografía Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tipografía de marca (local) -->
+    <link rel="preload" href="./assets/fonts/FinSerifDisplay-Bold.ttf" as="font" type="font/ttf" crossorigin>
 
     <!-- Google <model-viewer> (CDN) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -70,14 +68,17 @@
             <!-- Pantalla de carga a pantalla completa -->
             <div id="loading-spinner" slot="poster" class="loader">
                 <div class="loader-logo">
-                    <svg class="loader-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M12 10h.01M15 10h.01M9 14h.01M12 14h.01M15 14h.01"/>
-                    </svg>
+                    <img class="loader-logo-img" src="./assets/logo-monarca.png"
+                         alt="Monarca · Arquitectura que respira naturaleza" width="1483" height="884">
                 </div>
-                <p class="loader-title">MONARCA</p>
                 <div class="loader-bar-wrap">
                     <div class="loader-bar-track"><div id="load-bar" class="loader-bar-fill"></div></div>
                     <p id="load-pct" class="loader-pct">Cargando modelo… 0%</p>
+                </div>
+                <div class="loader-partner">
+                    <span class="loader-partner-label">Un proyecto de</span>
+                    <img class="loader-partner-logo" src="./assets/logo-melendez.png"
+                         alt="Constructora Meléndez" width="908" height="256">
                 </div>
             </div>
         </model-viewer>
@@ -85,9 +86,7 @@
         <!-- Placeholder cuando el modelo 3D aún no está disponible -->
         <div id="model-missing" class="missing hidden">
             <div class="missing-card">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M12 10h.01M15 10h.01M9 14h.01M12 14h.01M15 14h.01"/>
-                </svg>
+                <img class="missing-mark" src="./assets/mark-monarca.png" alt="" width="232" height="479">
                 <h2>Modelo en preparación</h2>
                 <p>El modelo 3D del edificio <b>Monarca</b> estará disponible muy pronto. Vuelve a visitarnos.</p>
             </div>
@@ -100,7 +99,7 @@
         <!-- Barra superior flotante -->
         <header class="topbar">
             <div class="brand">
-                <span class="logo-badge" aria-hidden="true">M</span>
+                <img class="brand-mark" src="./assets/mark-monarca.png" alt="" width="232" height="479">
                 <div class="brand-text">
                     <span class="brand-name">MONARCA</span>
                     <span class="brand-sub">Visor 3D · Realidad Aumentada</span>
@@ -127,7 +126,6 @@
         <!-- Dock inferior derecho: botón AR principal -->
         <div class="dock dock-right">
             <button id="ar-button-trigger" class="btn btn-primary ar-btn" aria-label="Iniciar modo Realidad Aumentada">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Ver en tu espacio
             </button>
         </div>
@@ -135,7 +133,8 @@
         <!-- Pista de interacción (se auto-oculta) -->
         <div id="interaction-hint" class="hint">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
-            Arrastra para rotar · Scroll para acercar · Clic derecho para desplazar
+            <span class="hint-mouse">Arrastra para rotar · Scroll para acercar · Clic derecho para desplazar</span>
+            <span class="hint-touch">Un dedo para girar · Dos dedos para mover y acercar</span>
         </div>
 
         <!-- Indicador de estado AR -->
@@ -177,6 +176,20 @@
             <div class="note">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span><b>Nota:</b> usa WebXR. Requiere Android (ARCore) o iPhone/iPad (ARKit · Safari).</span>
+            </div>
+        </section>
+
+        <section class="panel-section panel-credits">
+            <div class="credit">
+                <span class="credit-label">Un proyecto de</span>
+                <img class="credit-logo credit-logo--melendez" src="./assets/logo-melendez.png"
+                     alt="Constructora Meléndez · Nuestro proyecto es transformar vidas"
+                     width="908" height="256" loading="lazy">
+            </div>
+            <div class="credit">
+                <span class="credit-label">Visualización 3D y Realidad Aumentada</span>
+                <img class="credit-logo credit-logo--mies" src="./assets/logo-miesgroup.png"
+                     alt="MIES GROUP · 3D Studio" width="900" height="744" loading="lazy">
             </div>
         </section>
     </aside>

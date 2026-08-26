@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startAR() {
         if (window.monarcaTrack) window.monarcaTrack('ar_launch', { modelo: 'Monarca' });
+        hideHint();
         arStatusToast.style.opacity = '1';
         arStatusText.textContent = 'Iniciando cámara y buscando superficie...';
 
@@ -118,4 +119,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideHint() { if (interactionHint) interactionHint.classList.add('hint-hidden'); }
     setTimeout(hideHint, 5000);
     document.getElementById('stage').addEventListener('pointerdown', hideHint, { once: true });
+
+    // --- Encuadre según la forma de la pantalla ---
+    // En vertical, el ancho del terreno (82 m) obliga a alejar la cámara y el
+    // edificio queda diminuto. En ese caso acercamos y bajamos el objetivo
+    // para que la torre ocupe la pantalla alta y estrecha.
+    const mqPortrait = window.matchMedia('(max-width: 640px) and (orientation: portrait)');
+    let userMovedCamera = false;
+    modelViewer.addEventListener('camera-change', (e) => {
+        if (e.detail && e.detail.source === 'user-interaction') userMovedCamera = true;
+    });
+    function applyFraming() {
+        // Si el visitante ya movió la cámara, no le cambiamos la vista bajo los pies
+        if (userMovedCamera) return;
+        if (mqPortrait.matches) {
+            modelViewer.setAttribute('camera-target', '1.5m 16m 0.4m');
+            modelViewer.setAttribute('camera-orbit', '30deg 74deg 78%');
+        } else {
+            modelViewer.setAttribute('camera-target', '1.5m 19m 0.4m');
+            modelViewer.setAttribute('camera-orbit', '30deg 75deg 105%');
+        }
+    }
+    applyFraming();
+    mqPortrait.addEventListener('change', applyFraming);
 });
