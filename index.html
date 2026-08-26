@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Monarca • Visor 3D y Realidad Aumentada</title>
+    <meta name="description" content="Explora el edificio Monarca en 3D interactivo y colócalo en tu espacio con Realidad Aumentada.">
+    <meta name="theme-color" content="#f3ece1">
+
+    <!-- Favicon / iconos -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512.png">
+    <link rel="apple-touch-icon" href="./assets/favicon-180.png">
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Monarca • Visor 3D y Realidad Aumentada">
+    <meta property="og:description" content="Explora el edificio Monarca en 3D interactivo y colócalo en tu espacio con Realidad Aumentada.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Preconexiones para rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
+
+    <!-- Tipografía Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Google <model-viewer> (CDN) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <!-- Analítica (GA4) — se activa poniendo el ID en analytics.js -->
+    <script src="./analytics.js"></script>
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+    <!-- ===================== HERO: ESCENARIO 3D A PANTALLA COMPLETA ===================== -->
+    <section id="stage" class="hero">
+        <model-viewer
+            id="ar-model"
+            src="./monarca.glb"
+            ios-src="./monarca.usdz"
+            alt="Edificio Monarca — modelo 3D"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            ar-scale="auto"
+            ar-placement="floor"
+            camera-controls
+            touch-action="none"
+            auto-rotate
+            auto-rotate-delay="1200"
+            rotation-per-second="14deg"
+            camera-target="1.5m 19m 0.4m"
+            camera-orbit="30deg 75deg 105%"
+            min-camera-orbit="auto auto 2%"
+            max-camera-orbit="auto auto 200%"
+            min-field-of-view="8deg"
+            max-field-of-view="55deg"
+            shadow-intensity="1"
+            shadow-softness="1"
+            exposure="1.05"
+            interaction-prompt="none"
+            loading="eager"
+            reveal="auto"
+            aria-label="Visualizador 3D del edificio Monarca. Arrastra para rotar, scroll para acercar, clic derecho para desplazar.">
+
+            <!-- Pantalla de carga a pantalla completa -->
+            <div id="loading-spinner" slot="poster" class="loader">
+                <div class="loader-logo">
+                    <svg class="loader-logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M12 10h.01M15 10h.01M9 14h.01M12 14h.01M15 14h.01"/>
+                    </svg>
+                </div>
+                <p class="loader-title">MONARCA</p>
+                <div class="loader-bar-wrap">
+                    <div class="loader-bar-track"><div id="load-bar" class="loader-bar-fill"></div></div>
+                    <p id="load-pct" class="loader-pct">Cargando modelo… 0%</p>
+                </div>
+            </div>
+        </model-viewer>
+
+        <!-- Placeholder cuando el modelo 3D aún no está disponible -->
+        <div id="model-missing" class="missing hidden">
+            <div class="missing-card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M12 10h.01M15 10h.01M9 14h.01M12 14h.01M15 14h.01"/>
+                </svg>
+                <h2>Modelo en preparación</h2>
+                <p>El modelo 3D del edificio <b>Monarca</b> estará disponible muy pronto. Vuelve a visitarnos.</p>
+            </div>
+        </div>
+
+        <!-- Viñeta / degradados para legibilidad de la UI flotante -->
+        <div class="vignette" aria-hidden="true"></div>
+        <div class="top-scrim" aria-hidden="true"></div>
+
+        <!-- Barra superior flotante -->
+        <header class="topbar">
+            <div class="brand">
+                <span class="logo-badge" aria-hidden="true">M</span>
+                <div class="brand-text">
+                    <span class="brand-name">MONARCA</span>
+                    <span class="brand-sub">Visor 3D · Realidad Aumentada</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <button id="open-panel" class="icon-btn" aria-label="Información del proyecto" title="Información">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </button>
+                <button id="help-btn" class="icon-btn" aria-label="Ayuda" title="Ayuda">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dock inferior izquierdo: nombre del proyecto -->
+        <div class="dock dock-left">
+            <div class="info-pill">
+                <span class="info-dot"></span>
+                <span class="info-name">Edificio Monarca</span>
+            </div>
+        </div>
+
+        <!-- Dock inferior derecho: botón AR principal -->
+        <div class="dock dock-right">
+            <button id="ar-button-trigger" class="btn btn-primary ar-btn" aria-label="Iniciar modo Realidad Aumentada">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Ver en tu espacio
+            </button>
+        </div>
+
+        <!-- Pista de interacción (se auto-oculta) -->
+        <div id="interaction-hint" class="hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+            Arrastra para rotar · Scroll para acercar · Clic derecho para desplazar
+        </div>
+
+        <!-- Indicador de estado AR -->
+        <div id="ar-status-toast" class="ar-toast">
+            <span class="ar-toast-dot"></span>
+            <span id="ar-status-text">Buscando superficie...</span>
+        </div>
+
+    </section>
+
+    <!-- ===================== PANEL LATERAL (DRAWER) ===================== -->
+    <div id="panel-scrim" class="scrim hidden"></div>
+    <aside id="panel" class="panel" aria-label="Información del proyecto" aria-hidden="true">
+        <div class="panel-head">
+            <h2 class="panel-title">Monarca</h2>
+            <button id="close-panel" class="icon-btn icon-btn-sm" aria-label="Cerrar panel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <section class="panel-section">
+            <h3 class="panel-h3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg> El proyecto</h3>
+            <p class="panel-text">
+                <b>Monarca</b> es un proyecto arquitectónico que puedes explorar en 3D
+                desde cualquier dispositivo y colocar a escala en tu propio espacio
+                mediante Realidad Aumentada.
+            </p>
+        </section>
+
+        <section class="panel-section">
+            <h3 class="panel-h3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Cómo usarlo</h3>
+            <ol class="steps">
+                <li><span class="step-num">1</span><span><b>Visualiza:</b> arrastra para rotar el edificio.</span></li>
+                <li><span class="step-num">2</span><span><b>Inicia AR:</b> pulsa “Ver en tu espacio”.</span></li>
+                <li><span class="step-num">3</span><span><b>Detecta:</b> apunta a una superficie plana.</span></li>
+                <li><span class="step-num">4</span><span><b>Coloca:</b> el modelo se ancla solo.</span></li>
+                <li><span class="step-num">5</span><span><b>Interactúa:</b> con dos dedos mueve y escala.</span></li>
+            </ol>
+            <div class="note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span><b>Nota:</b> usa WebXR. Requiere Android (ARCore) o iPhone/iPad (ARKit · Safari).</span>
+            </div>
+        </section>
+    </aside>
+
+    <!-- ===================== MODAL DE AYUDA ===================== -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-card animate-fade-in-up">
+            <button id="close-help" class="icon-btn icon-btn-sm modal-close" aria-label="Cerrar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h3 class="modal-title">Soporte y dispositivos</h3>
+            <div class="modal-body">
+                <p><b>iOS (iPhone/iPad):</b> requiere iOS 12+. Safari abre el visor AR de ARKit (Quick Look).</p>
+                <p><b>Android:</b> requiere Chrome y un dispositivo compatible con ARCore.</p>
+                <p><b>PC de escritorio:</b> sin AR, pero con vista previa 3D interactiva completa.</p>
+                <p class="dim">Si el modelo no carga, verifica tu conexión e inténtalo de nuevo.</p>
+            </div>
+            <button id="close-help-btn" class="btn btn-primary modal-ok">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Lógica de la aplicación -->
+    <script src="./app.js" defer></script>
+</body>
+</html>

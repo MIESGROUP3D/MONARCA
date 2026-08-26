@@ -1,0 +1,9 @@
+# Modelos fuente pesados (locales; el sitio usa las versiones optimizadas de la raíz)
+Modelos_Fuente/
+
+# Sistema
+Thumbs.db
+.DS_Store
+
+# Config local de Claude Code
+.claude/
