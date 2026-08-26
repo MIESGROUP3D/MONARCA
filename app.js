@@ -133,8 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Si el visitante ya movió la cámara, no le cambiamos la vista bajo los pies
         if (userMovedCamera) return;
         if (mqPortrait.matches) {
-            modelViewer.setAttribute('camera-target', '1.5m 16m 0.4m');
-            modelViewer.setAttribute('camera-orbit', '30deg 74deg 78%');
+            // En vertical el ancho del terreno obliga a alejarse: encuadramos la torre
+            modelViewer.setAttribute('camera-target', '1.5m 18m 0.4m');
+            modelViewer.setAttribute('camera-orbit', '30deg 74deg 72%');
         } else {
             modelViewer.setAttribute('camera-target', '1.5m 19m 0.4m');
             modelViewer.setAttribute('camera-orbit', '30deg 75deg 105%');
