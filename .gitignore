@@ -7,3 +7,7 @@ Thumbs.db
 
 # Config local de Claude Code
 .claude/
+
+# Herramienta local de identificación de materiales
+debug.html
+monarca_debug.glb
