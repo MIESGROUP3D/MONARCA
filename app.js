@@ -134,10 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userMovedCamera) return;
         if (mqPortrait.matches) {
             // En vertical el ancho del terreno obliga a alejarse: encuadramos la torre
-            modelViewer.setAttribute('camera-target', '1.5m 18m 0.4m');
+            modelViewer.setAttribute('camera-target', '0.015m 0.18m 0.004m');
             modelViewer.setAttribute('camera-orbit', '30deg 74deg 72%');
         } else {
-            modelViewer.setAttribute('camera-target', '1.5m 19m 0.4m');
+            modelViewer.setAttribute('camera-target', '0.015m 0.19m 0.004m');
             modelViewer.setAttribute('camera-orbit', '30deg 75deg 105%');
         }
     }
