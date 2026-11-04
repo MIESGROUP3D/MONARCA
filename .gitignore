@@ -11,3 +11,6 @@ Thumbs.db
 # Herramienta local de identificación de materiales
 debug.html
 monarca_debug.glb
+
+# Modelos originales de carros y vegetación (Sketchfab, pesados); el sitio usa versiones optimizadas dentro de monarca.glb
+Modelos_Carros/
